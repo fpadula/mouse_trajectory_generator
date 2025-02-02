@@ -180,11 +180,13 @@ def main():
     while cmd not in command_types['exit']['triggers']:
         cmd = input('>')
         split_cmd = cmd.split()
-        cmd_type = split_cmd[0]
         if len(split_cmd) > 1:
             cmd_args = split_cmd[1]
+        elif len(split_cmd) == 0:
+            continue
         else:
             cmd_args = ''
+        cmd_type = split_cmd[0]
         if cmd_type in command_types['play']['triggers']:
             if cmd_args == '':
                 path = './data/data_sample.csv'
