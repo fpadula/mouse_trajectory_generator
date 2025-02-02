@@ -153,11 +153,61 @@ def main():
     """
     logging.basicConfig(format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
 
-    # board = DrawingRecorder('DataRecorder', './data/data_sample.csv')
-    board = DrawingPlayer('DataRecorder', './data/data_sample.csv')
-    while board.show_image():
-        pass
-    cv2.destroyAllWindows()
+    cmd = ''
+    command_types = {
+        'play':
+        {
+            'triggers': ['play', 'p'],
+            'usage': '[FILE] \n  Plays a trajectory file. If FILE is blank, plays sample data.'
+        },
+        'record':
+        {
+            'triggers': ['record', 'r'],
+            'usage': '[FILE] \n  Records a trajectory file. If FILE is blank, records sample data.'
+        },
+
+        'help':
+        {
+            'triggers': ['help', 'h'],
+            'usage': '\n  Displays a help message'
+        },
+        'exit': {
+            'triggers': ['quit', 'exit', 'q', 'e'],
+            'usage': '\n  Exits the program'
+        }
+    }
+    print('Type a command (h for help, q to quit)')
+    while cmd not in command_types['exit']['triggers']:
+        cmd = input('>')
+        split_cmd = cmd.split()
+        cmd_type = split_cmd[0]
+        if len(split_cmd) > 1:
+            cmd_args = split_cmd[1]
+        else:
+            cmd_args = ''
+        if cmd_type in command_types['play']['triggers']:
+            if cmd_args == '':
+                path = './data/data_sample.csv'
+            else:
+                path = cmd_args
+            board = DrawingPlayer('DataRecorder', path)
+            while board.show_image():
+                pass
+            cv2.destroyAllWindows()
+        elif cmd_type in command_types['record']['triggers']:
+            if cmd_args == '':
+                path = './data/data_sample.csv'
+            else:
+                path = cmd_args
+            board = DrawingRecorder('DataRecorder', path)
+            while board.show_image():
+                pass
+            cv2.destroyAllWindows()
+        elif cmd_type in command_types['help']['triggers']:
+            msg = '== Available commands == \n'
+            for cmd_name, cmd_fields in command_types.items():
+                msg += f'- {cmd_name}{cmd_fields["usage"]}\n'
+            print(msg)
 
 
 if __name__ == '__main__':
