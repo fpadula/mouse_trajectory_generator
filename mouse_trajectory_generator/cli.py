@@ -17,19 +17,6 @@ def main():
             'triggers': ['record', 'r'],
             'usage': '[FILE] \n  Records a trajectory file. If FILE is blank, records sample data.'
         },
-        'image':
-        {
-            'triggers': ['image', 'i'],
-            'usage': '[FILE] [ROTATION] \n  Loads an image to the board and apply a rotation to it.'
-            ' If FILE is blank, load a sample image.'
-        },
-        'sequence':
-        {
-            'triggers': ['sequence', 's'],
-            'usage': '[PREFIX] [AMOUNT] \n  Set sequence mode. Once recording starts, will perform'
-            ' AMOUNT recordings prefixed with PREFIX'
-        },
-
         'help':
         {
             'triggers': ['help', 'h'],
