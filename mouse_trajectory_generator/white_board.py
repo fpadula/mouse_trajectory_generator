@@ -3,7 +3,6 @@ import numpy as np
 from time import time_ns, sleep
 from threading import Thread
 import pandas as pd
-import logging
 
 
 class WhiteBoard:
@@ -78,13 +77,47 @@ class WhiteBoard:
         x_off = 0
         y_off = 0
         if anchor == 'center':
-            x_off += - int(img.shape[0] / 2)
-            y_off += - int(img.shape[1] / 2)
+            y_off += - int(img.shape[0] / 2)
+            x_off += - int(img.shape[1] / 2)
         elif anchor == 'bot_right':
-            x_off += - img.shape[0]
-            y_off += - img.shape[1]
-        pos = (pos[0] + x_off, pos[1] + y_off)
-        self.canvas[pos[0]:pos[0] + img.shape[0], pos[1]:pos[1] + img.shape[1]] = img
+            y_off += - img.shape[0]
+            x_off += - img.shape[1]
+
+        canvas_y_start = pos[0] + y_off
+        canvas_y_end = pos[0] + y_off + img.shape[0]
+        canvas_x_start = pos[1] + x_off
+        canvas_x_end = pos[1] + x_off + img.shape[1]
+
+        if canvas_y_start > self.canvas.shape[0] or canvas_y_end < 0 or \
+                canvas_x_start > self.canvas.shape[1] or canvas_x_end < 0:
+            raise RuntimeError('Drawing outside canvas region')
+
+        img_y_start = 0
+        img_y_end = img.shape[0]
+        if canvas_y_start < 0:
+            img_y_start = -canvas_y_start
+            canvas_y_start = 0
+        elif canvas_y_end > self.canvas.shape[0]:
+            img_y_end = canvas_y_end - self.canvas.shape[0]
+            if img.shape[0] % 2:
+                img_y_end -= 1
+            canvas_y_end = self.canvas.shape[0]
+
+        img_x_start = 0
+        img_x_end = img.shape[1]
+        if canvas_x_start < 0:
+            img_x_start = -canvas_x_start
+            canvas_x_start = 0
+        elif canvas_x_end > self.canvas.shape[1]:
+            img_x_end = canvas_x_end - self.canvas.shape[1]
+            if img.shape[1] % 2:
+                img_x_end -= 1
+            canvas_x_end = self.canvas.shape[1]
+
+        self.canvas[
+            canvas_y_start: canvas_y_end,
+            canvas_x_start: canvas_x_end,
+        ] = img[img_y_start:img_y_end, img_x_start:img_x_end]
 
     def draw(self):
         cv2.imshow(self.window_title, self.canvas)
@@ -174,7 +207,6 @@ class WhiteBoardPlayer:
 
 
 def main():
-    logging.basicConfig(format="%(asctime)s: %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
     print('This example illustrates the features of the WhiteBoard class')
     print('Try drawing something, press "q" when done')
     board = WhiteBoard('Drawing board')
