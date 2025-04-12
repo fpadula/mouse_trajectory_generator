@@ -15,4 +15,11 @@ setup(
     ],
     license='MIT',
     python_requires='>=3.7',
+    entry_points={
+        'console_scripts': [
+            'mouse_trajectory_generator = mouse_trajectory_generator.cli:main',
+        ],
+    },
+    include_package_data=True,
+    package_data={"mouse_trajectory_generator": ["*.csv"]}
 )

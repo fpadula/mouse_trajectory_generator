@@ -1,4 +1,5 @@
 from .white_board import WhiteBoard, WhiteBoardPlayer, WhiteBoardRecorder
+from os.path import dirname
 
 
 def main():
@@ -39,20 +40,20 @@ def main():
             cmd_args = ''
         cmd_type = split_cmd[0]
         if cmd_type in command_types['play']['triggers']:
-            if cmd_args[0] == '':
-                path = './data/data_sample.csv'
-            else:
+            if len(cmd_args) > 1:
                 path = cmd_args[0]
+            else:
+                path = f'{dirname(__file__)}/data_sample.csv'
             board = WhiteBoard('Data player', drawable=False)
             board.enable()
             player = WhiteBoardPlayer(board)
             player.play(file_path=path)
             board.disable()
         elif cmd_type in command_types['record']['triggers']:
-            if cmd_args[0] == '':
-                path = './data/data_sample.csv'
-            else:
+            if len(cmd_args) > 1:
                 path = cmd_args[0]
+            else:
+                path = f'{dirname(__file__)}/data_sample.csv'
             board = WhiteBoard('Data recorder')
             recorder = WhiteBoardRecorder(board)
             board.enable()
