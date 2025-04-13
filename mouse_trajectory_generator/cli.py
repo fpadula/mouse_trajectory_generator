@@ -40,7 +40,7 @@ def main():
             cmd_args = ''
         cmd_type = split_cmd[0]
         if cmd_type in command_types['play']['triggers']:
-            if len(cmd_args) > 1:
+            if len(cmd_args) >= 1:
                 path = cmd_args[0]
             else:
                 path = f'{dirname(__file__)}/data_sample.csv'
@@ -50,7 +50,7 @@ def main():
             player.play(file_path=path)
             board.disable()
         elif cmd_type in command_types['record']['triggers']:
-            if len(cmd_args) > 1:
+            if len(cmd_args) >= 1:
                 path = cmd_args[0]
             else:
                 path = f'{dirname(__file__)}/data_sample.csv'
