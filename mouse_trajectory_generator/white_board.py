@@ -188,21 +188,27 @@ class WhiteBoardPlayer:
         self.playing = False
         self.board = board
 
-    def play(self, file_path: str = '', df: pd.DataFrame = None):
+    def play(self, file_path: str = '', speed: float = 1.0, df: pd.DataFrame = None):
         self.playing = True
         if file_path == '' and df is None:
             raise RuntimeError('No filepath or dataframe specified')
+        if speed <= 0:
+            raise RuntimeError('Speed needs to be bigger than 0')
         if file_path != '':
             df = pd.read_csv(file_path)
         index = 0
-        while self.playing and index < len(df) - 1:
+        while self.playing and index < len(df):
             t0 = time_ns()
             self.board.draw()
-            self.board.process_event(*df.loc[index, ['x', 'y', 'l_button_down']])
+            self.board.process_event(*df.iloc[index][['x', 'y', 'l_button_down']])
             t1 = time_ns()
-            delta = df.loc[index + 1, 'stamp'] - df.loc[index, 'stamp'] - (t1 - t0)
+            if index == len(df) - 1:
+                self.board.draw()
+                self.board.process_event(*df.iloc[index][['x', 'y']], False)
+                break
+            delta = df.iloc[index + 1]['stamp'] - df.iloc[index]['stamp'] - (t1 - t0)
             if delta > 0:
-                sleep(delta * 1e-9)
+                sleep(delta * 1e-9 / speed)
             index += 1
 
 
