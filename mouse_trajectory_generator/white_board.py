@@ -98,7 +98,7 @@ class WhiteBoard:
             img_y_start = -canvas_y_start
             canvas_y_start = 0
         elif canvas_y_end > self.canvas.shape[0]:
-            img_y_end = canvas_y_end - self.canvas.shape[0]
+            img_y_end -= canvas_y_end - self.canvas.shape[0]
             if img.shape[0] % 2:
                 img_y_end -= 1
             canvas_y_end = self.canvas.shape[0]
@@ -109,7 +109,7 @@ class WhiteBoard:
             img_x_start = -canvas_x_start
             canvas_x_start = 0
         elif canvas_x_end > self.canvas.shape[1]:
-            img_x_end = canvas_x_end - self.canvas.shape[1]
+            img_x_end -= canvas_x_end - self.canvas.shape[1]
             if img.shape[1] % 2:
                 img_x_end -= 1
             canvas_x_end = self.canvas.shape[1]
